@@ -139,7 +139,7 @@ a {
 
 <input type="reset" value="Reset">
 
-<input type="button" name="viewSignUp" value="View Sign Ups">
+<button type="button" id="viewSignups">View Sign-Ups</button>
 
 </form>
 
@@ -178,16 +178,16 @@ form.onsubmit = function(event) {
     }
     
     // Get all values
-    const studentID = document.getElementById('StudentID').value.trim();
-    const fullName = document.getElementById('FullName').value.trim();
-    const birthday = document.getElementById('Birthday').value;
-    const email = document.getElementById('Email').value.trim();
-    const mobilePhone = document.getElementById('MobilePhone').value.trim();
-    const gradeLevel = document.getElementById('GradeLevel').value;
+    const studentID = document.getElementById('studentId').value.trim();
+    const fullName = document.getElementById('fullName').value.trim();
+    const birthday = document.getElementById('bday').value;
+    const email = document.getElementById('emailAd').value.trim();
+    const mobilePhone = document.getElementById('mobileNum').value.trim();
+    const gradeLevel = document.getElementById('gradeLevel').value;
     
     // Get selected radio button value
     let internExtern = '';
-    const internExternRadios = document.getElementsByName('InternExtern');
+    const internExternRadios = document.getElementsByName('status');
     for (let i = 0; i < internExternRadios.length; i++) {
         if (internExternRadios[i].checked) {
             internExtern = internExternRadios[i].value;
@@ -233,7 +233,7 @@ form.onsubmit = function(event) {
 
 document.getElementById('viewSignups').onclick = function() {
     // Navigate to the view page
-    window.location.href = './viewSignUps.html';
+    window.location.href = "./viewSignUps.html";
 };
 
 </script>
