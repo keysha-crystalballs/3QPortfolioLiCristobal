@@ -21,7 +21,7 @@
                 border: 1px solid #ccc;
                 border-radius: 6px;
             }
-            input[type="submit"] {
+            button[type="submit"] {
                 width: 100%;
                 background-color: #1a73e8;
                 color: white;
@@ -47,13 +47,59 @@
                 flex-direction: row-reverse;
                 justify-content: flex-end;
             }
+            #movieList {
+                max-width: 500px;
+                margin: auto;
+                padding: 30px;
+            }
+            .movie-item {
+                border: 1px solid #ddd;
+                border-radius: 6px;
+                padding: 10px 14px;
+                margin-bottom: 8px;
+            }
         </style>
+
+        <script> 
+            function addMovie() {
+                var title = document.getElementById("title").value;
+                var year = document.getElementById("year").value;
+                var genre = document.getElementById("movieGenre").value;
+                var ratingInput = document.querySelector('input[name="rating"]:checked');
+                if (ratingInput) {
+                    var rating = ratingInput.value;
+                } else {
+                    var rating = "0";
+                }
+                var newMovie = {
+                title: title,
+                year: year,
+                genre: genre,
+                rating: rating
+                }
+                var movies = JSON.parse(localStorage.getItem("movies")) || [];
+                movies.push(newMovie);
+                localStorage.setItem("movies", JSON.stringify(movies));
+                displayMovies();
+            }
+
+            function displayMovies() {
+                document.getElementById("movieList").innerHTML = "";
+                var movies = JSON.parse(localStorage.getItem("movies")) || [];
+                for (let i = 0; i < movies.length; i++) {
+                    var movie = movies[i];
+                    var item = document.createElement("div");
+                    item.className = "movie-item";
+                    item.innerHTML = movie.title + " (" + movie.year + ") - " + movie.genre + ", Rating: " + "<span style='color: gold;'>" + "★".repeat(movie.rating) + "</span>";
+                    document.getElementById("movieList").appendChild(item);
+                }
+            }
+            window.onload = displayMovies;
+        </script>
     </head>
         <body>
             <h1> Add a Movie</h1>
-            <form 
-                id="login"
-                method="post">
+            <form  id="login" onsubmit="addMovie(); return false;">
 
                 <label for="title"> Title: </label>
                 <input type="text" id="title" name="title" required><br><br>
@@ -74,6 +120,8 @@
 
                 <br><br>
 
+                <p> Rating: </p>
+
                 <div class="stars">
                 <input type="radio" name="rating" value="5" id="star5">
                 <label for="star5">★</label>
@@ -89,8 +137,10 @@
 
                 <br><br>
 
-                <input type="submit" value="Add Movie">
-
+                <button type="submit">Add Movie</button>
+                <button onclick="localStorage.clear(); displayMovies();">Clear List</button>
             </form>
+            <h1> Movie Lists: </h1>
+            <div id="movieList"></div>
         </body>
 </html>
