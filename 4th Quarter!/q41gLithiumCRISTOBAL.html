@@ -67,18 +67,22 @@
                 var genre = document.getElementById("movieGenre").value;
                 var ratingInput = document.querySelector('input[name="rating"]:checked');
                 if (ratingInput) {
-                    var rating = ratingInput.value;
-                } else {
-                    var rating = "0";
+                    var rating = parseInt(ratingInput.value);
+                } 
+                else {
+                    var rating = 0;
                 }
-                var newMovie = {
-                title: title,
-                year: year,
-                genre: genre,
-                rating: rating
-                }
+
                 var movies = JSON.parse(localStorage.getItem("movies")) || [];
-                movies.push(newMovie);
+
+                let existingMovie = movies.find(movie => movie.title === title);
+
+                if (existingMovie) {
+                    existingMovie.rating = Math.round((parseInt(existingMovie.rating) + rating) / 2);
+                } 
+                else {
+                    movies.push({ title, year, genre, rating });
+                }
                 localStorage.setItem("movies", JSON.stringify(movies));
                 displayMovies();
             }
@@ -91,10 +95,21 @@
                     var item = document.createElement("div");
                     item.className = "movie-item";
                     item.innerHTML = movie.title + " (" + movie.year + ") - " + movie.genre + ", Rating: " + "<span style='color: gold;'>" + "★".repeat(movie.rating) + "</span>";
+                    var deleteButton = document.createElement("button");
+                    deleteButton.innerHTML = "Delete";
+                    deleteButton.onclick = function() {
+                        if (confirm("Are you sure you want to delete?")) {
+                            movies.splice(i, 1);
+                            localStorage.setItem("movies", JSON.stringify(movies));
+                            displayMovies();
+                        }
+                    }
+                    item.appendChild(deleteButton);
                     document.getElementById("movieList").appendChild(item);
                 }
             }
             window.onload = displayMovies;
+
         </script>
     </head>
         <body>
@@ -138,7 +153,6 @@
                 <br><br>
 
                 <button type="submit">Add Movie</button>
-                <button onclick="localStorage.clear(); displayMovies();">Clear List</button>
             </form>
             <h1> Movie Lists: </h1>
             <div id="movieList"></div>
